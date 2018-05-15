@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="customer_segment">Customer Segment</string>
+    <string name="service_facility">Service facility</string>
+    <string name="accessibility">Accessibility</string>
+    <string name="cs_personal">Personal</string>
+    <string name="cs_business">Business</string>
+    <string name="sf_saturday">Saturday counter service</string>
+    <string name="sf_currency">On demand currency</string>
+    <string name="acc_wheel_chair">Wheel chair access</string>
+    <string name="cs_sme">SME</string>
+    <string name="search">Search</string>
+    <string name="branch">Branch</string>
+    <string name="atm">ATM</string>
+</resources>
