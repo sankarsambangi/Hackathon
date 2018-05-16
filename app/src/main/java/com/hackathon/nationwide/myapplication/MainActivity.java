@@ -1,5 +1,6 @@
 package com.hackathon.nationwide.myapplication;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -42,6 +43,7 @@ import org.json.JSONObject;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.List;
+import java.util.Locale;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -52,6 +54,11 @@ import javax.net.ssl.X509TrustManager;
 
 public class MainActivity extends AppCompatActivity
         implements FirstFragment.OnFragmentInteractionListener, ItemFragment.OnListFragmentInteractionListener, ATMFragment.OnFragmentInteractionListener{
+
+    public enum ResponseType {
+        BRANCH,
+        ATM
+    }
 
     private FragmentPagerAdapter mSeciontsPagerAdapter;
     private ViewPager mViewPager;
@@ -70,79 +77,12 @@ public class MainActivity extends AppCompatActivity
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
-
-//        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-//        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-//        handleSSLHandshake();
-//        navigation.setSelectedItemId(R.id.nav_camera);
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                *//*RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-                String url ="https://openapi.bankofireland.com/open-banking/v2.1/branches";
-
-                // Request a string response from the provided URL.
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // Display the first 500 characters of the response string.
-                                Log.i("Hackathon", "Response is: "+ response.substring(0,500));
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("Hackathon", "Didn't work");
-                    }
-                });
-
-// Add the request to the RequestQueue.
-                VolleyController.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);*//*
-
-                checkUsernameAvailability();
-            }
-        });*/
-
-        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);*/
     }
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.nav_camera:
-                    FirstFragment firstFragment = FirstFragment.newInstance(null, null);
-
-
-                    if (firstFragment != null) {
-                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        ft.replace(R.id.content_frame, firstFragment);
-                        ft.commit();
-                    }
-                    return true;
-                case R.id.nav_gallery:
-                    return true;
-            }
-            return false;
-        }
-    };
 
     @Override
     public void onBackPressed() {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        DummyContent.ITEMS.clear();
         getSupportFragmentManager().popBackStack();
-        //ft.replace(R.id.content_frame, firstFragment);
-        //ft.commit();
     }
 
     @Override
@@ -151,56 +91,6 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    /*@SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            FirstFragment firstFragment = FirstFragment.newInstance(null, null);
-
-
-            if (firstFragment != null) {
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, firstFragment);
-                ft.commit();
-            }
-
-            *//*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);*//*
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }*/
 
     public static void handleSSLHandshake() {
         try {
@@ -231,40 +121,23 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void checkUsernameAvailability() {
-
-        JacksonRequest<BranchResponseModel> request = new JacksonRequest<>(
-                getApplicationContext(),
-                Request.Method.GET,
-                //"http://localhost:56554/MySchoolService.svc/CheckParentUserName/Narasimha.Maddirala"
-                "https://openapi.bankofireland.com/open-banking/v2.1/branches",
-                null,
-                BranchResponseModel.class,
-                new Response.Listener<BranchResponseModel>(){
-                    @Override
-                    public void onResponse(BranchResponseModel response) {
-                        Log.i("Hackathon", "Response is: "+ response.toString());
-                    }
-                },
-                new Response.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_LONG).show();
-                    }
-                });
-        VolleyController.getInstance(getApplicationContext()).addToRequestQueue(request);
-
-    }
-
     @Override
-    public void onFragmentInteraction(List<JSONObject> list) {
+    public void onFragmentInteraction(List<JSONObject> list, ResponseType responseType) {
         try{
             Log.d("Hackthon", "Filtered list size"+list.size());
             ItemFragment firstFragment = ItemFragment.newInstance(1);
+            String parameter = responseType == ResponseType.BRANCH ? "Name" : "Identification";
 
             for(int i=0; i<list.size(); i++) {
                 JSONObject branch = list.get(i);
-                DummyContent.DummyItem item = new DummyContent.DummyItem(i+"", branch.getString("Name"), branch.getString("Name"));
+                JSONObject latlng = new JSONObject();
+                if(responseType == ResponseType.BRANCH) {
+                    latlng = branch.optJSONObject("PostalAddress").optJSONObject("GeoLocation").optJSONObject("GeographicCoordinates");
+                } else if (responseType == ResponseType.ATM) {
+                    latlng = branch.optJSONObject("Location").optJSONObject("PostalAddress").optJSONObject("GeoLocation").optJSONObject("GeographicCoordinates");
+                }
+
+                DummyContent.DummyItem item = new DummyContent.DummyItem(i+"", branch.getString(parameter), branch.getString(parameter), latlng.optString("Latitude"), latlng.optString("Longitude"));
                 DummyContent.addItem(item);
             }
             Toast.makeText(this, "Branches found : "+ list.size(), Toast.LENGTH_LONG).show();
@@ -275,13 +148,25 @@ public class MainActivity extends AppCompatActivity
                 ft.commit();
             }
         } catch (Exception e){
-
+            Log.e("Hackathon", e.getMessage());
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
     }
 
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        Log.i("Hackathon", item.details);
+        Toast.makeText(this,item.details, Toast.LENGTH_SHORT).show();
 
+        Double latitude = Double.parseDouble(item.latitude);
+        Double longitude = Double.parseDouble(item.longitude);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:<" + latitude  + ">,<" + longitude + ">?q=<" + latitude  + ">,<" + longitude + ">(" + item.details + ")"));
+
+
+//        String urlAddress = "http://maps.google.com/maps?q="+ item.latitude  +"," + item.longitude +"("+ item.details + ")&iwloc=A&hl=es";
+//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlAddress));
+
+        startActivity(intent);
     }
 }

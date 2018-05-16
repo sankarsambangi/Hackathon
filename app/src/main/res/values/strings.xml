@@ -9,13 +9,20 @@
     <string name="customer_segment">Customer Segment</string>
     <string name="service_facility">Service facility</string>
     <string name="accessibility">Accessibility</string>
+    <string name="launguages_">Accessibility</string>
     <string name="cs_personal">Personal</string>
     <string name="cs_business">Business</string>
-    <string name="sf_saturday">Saturday counter service</string>
-    <string name="sf_currency">On demand currency</string>
-    <string name="acc_wheel_chair">Wheel chair access</string>
+    <string name="sf_saturday">Saturday Counter Service</string>
+    <string name="sf_currency">On Demand Currency</string>
+    <string name="acc_wheel_chair">Wheel Chair Access</string>
     <string name="cs_sme">SME</string>
     <string name="search">Search</string>
     <string name="branch">Branch</string>
     <string name="atm">ATM</string>
+    <string name="sf_atm_cash_withdrawal">Cash Withdrawal</string>
+    <string name="sf_atm_balance">Balance</string>
+    <string name="sf_atm_pin_change">PIN Change</string>
+    <string name="sf_atm_mobile_topup">Mobile Phone Topup</string>
+    <string name="acc_automatic_door">Automatic Doors</string>
+    <string name="acc_level_access">Level Access</string>
 </resources>

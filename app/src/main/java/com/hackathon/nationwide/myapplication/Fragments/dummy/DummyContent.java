@@ -37,9 +37,9 @@ public class DummyContent {
         ITEM_MAP.put(item.id, item);
     }
 
-    private static DummyItem createDummyItem(int position) {
+    /*private static DummyItem createDummyItem(int position) {
         return new DummyItem(String.valueOf(position), "Item " + position, makeDetails(position));
-    }
+    }*/
 
     private static String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();
@@ -57,11 +57,15 @@ public class DummyContent {
         public final String id;
         public final String content;
         public final String details;
+        public final String latitude;
+        public final String longitude;
 
-        public DummyItem(String id, String content, String details) {
+        public DummyItem(String id, String content, String details, String latitude, String longitude) {
             this.id = id;
             this.content = content;
             this.details = details;
+            this.latitude = latitude;
+            this.longitude = longitude;
         }
 
         @Override

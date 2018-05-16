@@ -92,12 +92,9 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         mSearchButton = (AppCompatButton) view.findViewById(R.id.search);
         mSearchButton.setOnClickListener((View.OnClickListener) this);
-        //Find the +1 button
-        //mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
 
         return view;
     }
@@ -105,16 +102,6 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-
-        // Refresh the state of the +1 button each time the activity receives focus.
-        //mPlusOneButton.initialize(PLUS_ONE_URL, PLUS_ONE_REQUEST_CODE);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(null);
-        }
     }
 
     @Override
@@ -148,11 +135,6 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
                             List<JSONObject> branches = new ArrayList<JSONObject>();
                             JSONArray availableBranches = response.getJSONArray("data").getJSONObject(0).getJSONArray("Brand").getJSONObject(0).getJSONArray("Branch");
 
-                            /*for(JSONArray branch : availableBranches) {
-                                if (branch.getServiceAndFacility().contains("WiFi")){
-                                    branches.add(branch);
-                                }
-                            }*/
                             List<String> selectedServices = new ArrayList<String>();
                             if(((AppCompatCheckBox)getActivity().findViewById(R.id.ctv_currency)).isChecked()) {
                                 selectedServices.add("OnDemandCurrency");
@@ -169,19 +151,18 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
                                 JSONObject branch = availableBranches.getJSONObject(i);
                                 JSONArray facilities = availableBranches.getJSONObject(i).getJSONArray("ServiceAndFacility");
                                 JSONArray accessibility = availableBranches.getJSONObject(i).getJSONArray("Accessibility");
-//                                if(facilities.toString().contains("SaturdayCounterService")){
-//                                    branches.add(branch);
-//                                }
-                                //String facilitesString = facilities.toString();
-                                //String accessbilityString = accessibility.toString();
                                 boolean optionAvailable = true;
-                                if(selectedServices.contains("OnDemandCurrency")) {
-                                    optionAvailable = facilities.toString().contains("OnDemandCurrency");
+
+                                if(facilities != null) {
+                                    if(selectedServices.contains("OnDemandCurrency")) {
+                                        optionAvailable = facilities.toString().contains("OnDemandCurrency");
+                                    }
+                                    if(selectedServices.contains("SaturdayCounterService")) {
+                                        optionAvailable = facilities.toString().contains("SaturdayCounterService");
+                                    }
                                 }
-                                if(selectedServices.contains("SaturdayCounterService")) {
-                                    optionAvailable = facilities.toString().contains("SaturdayCounterService");
-                                }
-                                if (selectedaccessibility.contains("WheelchairAccess")) {
+
+                                if (accessibility != null && selectedaccessibility.contains("WheelchairAccess")) {
                                     optionAvailable = accessibility.toString().contains("WheelchairAccess");
                                 }
                                 if(optionAvailable){
@@ -189,10 +170,9 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
                                 }
                             }
 
-                            mListener.onFragmentInteraction(branches);
-                            //Log.d("Hackathon", "Filter list size : "+branches.size());
+                            mListener.onFragmentInteraction(branches, MainActivity.ResponseType.BRANCH);
                         }catch (Exception e){
-
+                            Log.e("Hackathon", e.getMessage());
                         }
 
                     }
@@ -210,6 +190,6 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(List<JSONObject> list);
+        void onFragmentInteraction(List<JSONObject> list, MainActivity.ResponseType responseType);
     }
 }
