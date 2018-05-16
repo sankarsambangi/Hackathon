@@ -58,7 +58,7 @@
         <android.support.v7.widget.AppCompatCheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ctv_personal"
+            android:id="@+id/ctv_currency"
             android:text="@string/sf_currency"
             android:button="@null"
             android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
@@ -66,7 +66,7 @@
         <android.support.v7.widget.AppCompatCheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ctv_business"
+            android:id="@+id/ctv_saturday"
             android:text="@string/sf_saturday"
             android:button="@null"
             android:gravity="center_vertical"
@@ -100,5 +100,5 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="60dp"
         android:textColor="@android:color/white"
-        android:background="@android:color/holo_blue_light"/>
+        android:background="@color/colorPrimaryDark"/>
 </RelativeLayout>

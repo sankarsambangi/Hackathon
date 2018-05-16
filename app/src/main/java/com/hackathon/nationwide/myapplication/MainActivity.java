@@ -271,6 +271,7 @@ public class MainActivity extends AppCompatActivity
             if (firstFragment != null) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.content_frame, firstFragment);
+                ft.addToBackStack("list");
                 ft.commit();
             }
         } catch (Exception e){

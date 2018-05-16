@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -52,6 +54,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
     private String mParam2;
     private PlusOneButton mPlusOneButton;
     private AppCompatButton mSearchButton;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -133,61 +136,6 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        /*JacksonRequest<BranchResponseModel> request = new JacksonRequest<>(
-                getActivity(),
-                Request.Method.GET,
-                "https://api.hsbc.com/open-banking/v2.1/branches",
-                null,
-                BranchResponseModel.class,
-                new Response.Listener<BranchResponseModel>(){
-                    @Override
-                    public void onResponse(BranchResponseModel response) {
-                        Log.i("Hackathon", "Response is: "+ response.toString());
-                        List<BranchModel> branches = new ArrayList<BranchModel>();
-                        List<BranchModel> availableBranches = response.getData().getBrand().get(0).getBranch();
-
-                        for(BranchModel branch : availableBranches) {
-                            if (branch.getServiceAndFacility().contains("WiFi")){
-                                branches.add(branch);
-                            }
-                        }
-                        Log.d("Hackathon", "Filter list size : "+branches.size());
-                    }
-                },
-                new Response.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
-                    }
-                });*/
-
-        /*JacksonRequest<BranchResponseModel> request = new JacksonRequest<>(
-                getActivity(),
-                Request.Method.GET,
-                "https://openapi.natwest.com/open-banking/v2.1/branches",
-                null,
-                BranchResponseModel.class,
-                new Response.Listener<BranchResponseModel>(){
-                    @Override
-                    public void onResponse(BranchResponseModel response) {
-                        Log.i("Hackathon", "Response is: "+ response.toString());
-                        List<BranchModel> branches = new ArrayList<BranchModel>();
-                        List<BranchModel> availableBranches = response.getData().getBrand().get(0).getBranch();
-
-                        for(BranchModel branch : availableBranches) {
-                            if (branch.getServiceAndFacility().contains("WiFi")){
-                                branches.add(branch);
-                            }
-                        }
-                        //Log.d("Hackathon", "Filter list size : "+branches.size());
-                    }
-                },
-                new Response.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
-                    }
-                });*/
 
         JsonObjectRequest request1 = new JsonObjectRequest(
                 "https://openapi.natwest.com/open-banking/v2.1/branches",
@@ -205,10 +153,38 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
                                     branches.add(branch);
                                 }
                             }*/
+                            List<String> selectedServices = new ArrayList<String>();
+                            if(((AppCompatCheckBox)getActivity().findViewById(R.id.ctv_currency)).isChecked()) {
+                                selectedServices.add("OnDemandCurrency");
+                            }
+                            if(((AppCompatCheckBox)getActivity().findViewById(R.id.ctv_saturday)).isChecked()) {
+                                selectedServices.add("SaturdayCounterService");
+                            }
+                            List<String> selectedaccessibility = new ArrayList<String>();
+                            if(((AppCompatCheckBox)getActivity().findViewById(R.id.acc_wheel)).isChecked()) {
+                                selectedaccessibility.add("WheelchairAccess");
+                            }
+
                             for(int i=0; i<availableBranches.length(); i++){
                                 JSONObject branch = availableBranches.getJSONObject(i);
                                 JSONArray facilities = availableBranches.getJSONObject(i).getJSONArray("ServiceAndFacility");
-                                if(facilities.toString().contains("SaturdayCounterService")){
+                                JSONArray accessibility = availableBranches.getJSONObject(i).getJSONArray("Accessibility");
+//                                if(facilities.toString().contains("SaturdayCounterService")){
+//                                    branches.add(branch);
+//                                }
+                                //String facilitesString = facilities.toString();
+                                //String accessbilityString = accessibility.toString();
+                                boolean optionAvailable = true;
+                                if(selectedServices.contains("OnDemandCurrency")) {
+                                    optionAvailable = facilities.toString().contains("OnDemandCurrency");
+                                }
+                                if(selectedServices.contains("SaturdayCounterService")) {
+                                    optionAvailable = facilities.toString().contains("SaturdayCounterService");
+                                }
+                                if (selectedaccessibility.contains("WheelchairAccess")) {
+                                    optionAvailable = accessibility.toString().contains("WheelchairAccess");
+                                }
+                                if(optionAvailable){
                                     branches.add(branch);
                                 }
                             }
@@ -224,7 +200,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), "I'm f**ked", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Doomed", Toast.LENGTH_LONG).show();
                     }
                 }
         );
@@ -236,5 +212,4 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(List<JSONObject> list);
     }
-
 }
